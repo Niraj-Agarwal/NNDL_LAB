@@ -1,37 +1,40 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 import numpy as np
 
-# Input data and expected outputs
+# Input data: AND function
 x = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-y = np.array([0, 1, 1, 0])
+y = np.array([0, 0, 0, 1])  # Target outputs for AND
 
-# Initial parameters
-w1, w2, bias = 0.1, 0.2, 0.1
-learning_rate = 0.4
-epochs = 6000
+# Initialize weights and bias
+w1 = 0.8
+w2 = 0.9
+bias = 0.25
+learning_rate = 0.1
 
 # Sigmoid activation function
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
 
-# Training the perceptron
-for epoch in range(epochs):
-    for i in range(len(x)):
-        # Compute weighted sum and prediction
-        weighted_sum = x[i][0] * w1 + x[i][1] * w2 + bias
-        prediction = sigmoid(weighted_sum)
+# Training loop
+for epoch in range(5000):
+    for i in range(4):
+        # Calculate the weighted input plus bias
+        z = x[i][0] * w1 + x[i][1] * w2 + bias
+        result = sigmoid(z)
+
+        # Calculate the error
+        error = y[i] - result
         
-        # Calculate error and update weights/bias
-        error = y[i] - prediction
+        # Update weights and bias
         w1 += learning_rate * error * x[i][0]
         w2 += learning_rate * error * x[i][1]
         bias += learning_rate * error
 
-# Display the results
-print("Output after training:")
-for i in range(len(x)):
-    weighted_sum = x[i][0] * w1 + x[i][1] * w2 + bias
-    prediction = sigmoid(weighted_sum)
-    print(f"Input: {x[i]}, Predicted Output: {prediction:.4f}, Expected Output: {y[i]}")
+# Testing the trained model
+print("Final weights:", w1, w2)
+print("Final bias:", bias)
+
+# Show results for all inputs
+for i in range(4):
+    z = x[i][0] * w1 + x[i][1] * w2 + bias
+    result = sigmoid(z)
+    print(f"Input: {x[i]}, Output: {result:.4f}, Predicted: {1 if result >= 0.5 else 0}")
